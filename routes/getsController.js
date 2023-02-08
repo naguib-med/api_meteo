@@ -9,42 +9,48 @@ router.get('/weather/:city', (req, res) => {
             console.error(err);
             return;
         }
-        res.json({
-            _id : weather._id,
-            city: weather.city,
-            coords: {
-                lat: weather.coords.lat,
-                lon: weather.coords.lon,
-            },
-            temperature: weather.temperature,
-            windSpeed: weather.windSpeed,
-            humidity: weather.humidity,
-        });
+        if (weather == null) {
+            res.status(404).send('Not found');
+        } else {
+            res.json({
+                _id: weather._id,
+                city: weather.city,
+                coords: {
+                    lat: weather.coords.lat,
+                    lon: weather.coords.lon,
+                },
+                temperature: weather.temperature,
+                windSpeed: weather.windSpeed,
+                humidity: weather.humidity,
+            });
+        }
     });
 });
 
 router.get('/weather', (req, res) => {
     const lat = req.query.lat;
     const lon = req.query.lon;
-
     Weathers.findOne({'coords.lat': lat, 'coords.lon': lon}, (err, weather) => {
         if (err) {
             console.error(err);
             return;
         }
-        res.json({
-            _id : weather._id,
-            city: weather.city,
-            coords: {
-                lat: weather.coords.lat,
-                lon: weather.coords.lon,
-            },
-            temperature: weather.temperature,
-            windSpeed: weather.windSpeed,
-            humidity: weather.humidity,
-        });
+        if (weather == null) {
+            res.status(404).send('Not found, try again');
+        } else {
+            res.json({
+                _id : weather._id,
+                city: weather.city,
+                coords: {
+                    lat: weather.coords.lat,
+                    lon: weather.coords.lon,
+                },
+                temperature: weather.temperature,
+                windSpeed: weather.windSpeed,
+                humidity: weather.humidity,
+            });
+        }
     });
-
 });
 
 module.exports = router;
